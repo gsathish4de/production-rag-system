@@ -1,0 +1,83 @@
+version: '3.9'
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Production RAG System - Docker Compose
+# ═══════════════════════════════════════════════════════════════════════════
+# Run with: docker-compose up -d
+# Stop with: docker-compose down
+
+services:
+  # ─── PostgreSQL + pgvector ────────────────────────────────────────────────
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: rag-postgres
+    environment:
+      POSTGRES_USER: rag_user
+      POSTGRES_PASSWORD: rag_password_dev
+      POSTGRES_DB: rag_system
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rag_user -d rag_system"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rag-network
+
+  # ─── Redis (Optional: for caching) ────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: rag-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - rag-network
+
+  # ─── API Server (Uncomment after building) ────────────────────────────────
+  # api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: rag-api
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - PGVECTOR_HOST=postgres
+  #     - PGVECTOR_PORT=5432
+  #     - PGVECTOR_DB=rag_system
+  #     - PGVECTOR_USER=rag_user
+  #     - PGVECTOR_PASSWORD=rag_password_dev
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   volumes:
+  #     - ./data:/app/data
+  #     - ./logs:/app/logs
+  #   networks:
+  #     - rag-network
+  #   command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  rag-network:
+    driver: bridge

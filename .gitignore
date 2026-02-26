@@ -1,0 +1,109 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# Production RAG System - Git Ignore
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─── Environment & Secrets ───────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secrets/
+
+# ─── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ─── Virtual Environments ────────────────────────────────────────────────────
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# ─── IDEs & Editors ──────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ─── Testing ─────────────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# ─── Jupyter Notebooks ───────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+logs/
+*.log
+*.log.*
+
+# ─── Data & Outputs ──────────────────────────────────────────────────────────
+# Keep structure, ignore contents
+data/sample_docs/*
+!data/sample_docs/.gitkeep
+data/eval/*
+!data/eval/.gitkeep
+!data/eval/golden_questions.json
+
+outputs/*
+!outputs/.gitkeep
+
+# Vector store indices (too large for git)
+*.faiss
+*.index
+
+# ─── Docker ──────────────────────────────────────────────────────────────────
+docker-compose.override.yml
+
+# ─── Database ────────────────────────────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ─── macOS ───────────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ─── Windows ─────────────────────────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ─── Temporary Files ─────────────────────────────────────────────────────────
+*.tmp
+*.temp
+*.bak
+*.swp
